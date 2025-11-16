@@ -1,0 +1,17 @@
+#level-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3rem;
+    margin: 5%;
+    color: #FEF2BF;
+}
+
+h1 {
+    display: block;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
+body {
+    text-align: center;
+    background-color: #011F3F;
+}
