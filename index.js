@@ -15,6 +15,15 @@ document.addEventListener("keydown" , function(event){
         nextSequence();         
     }    
 });
+// --------------------------- Detecting touch -------------------------------
+document.addEventListener("touchstart", function() {
+    if (!started) {
+        started = true;        
+        level = 0;            
+        gamePattern = [];   
+        nextSequence();         
+    }
+});
 // --------------------------- Going next step -------------------------------
 function nextSequence () {
     level++;
