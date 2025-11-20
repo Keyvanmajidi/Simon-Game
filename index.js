@@ -1,69 +1,116 @@
-let level = 1;
-let gameStarted = false;
+var level = 0;
+var gamePattern = [];
+var userPattern = [];
+var started = false;
+var buttonColors = ["green", "red", "yellow", "blue"];
 
+// ---------------- Detecting keydown & Initializing the game --------------------- 
 
-document.addEventListener("keydown" , function() {
-
-    if (!gameStarted){
-        startGame();
-    }
+document.addEventListener("keydown" , function(event){
+    if (!started) {
+        
+        started = true;        
+        level = 0;            
+        gamePattern = [];   
+        nextSequence();         
+    }    
 });
-
-function startGame() {
-    gameStarted = true;
+// --------------------------- Going next step -------------------------------
+function nextSequence () {
+    level++;
     document.getElementById("level-title").textContent = "Level " + level;
-    var randNum = Math.floor( Math.random * 4) + 1;
+    userPattern = [];
+    var randomNumber = Math.floor(Math.random() * 4);
+    var randomChosenColor = buttonColors[randomNumber];
+    gamePattern.push(randomChosenColor);
+    boxAnimation(randomChosenColor);
+    makeSound(randomChosenColor);
 
 }
+// --------------------- Detecting clicking ------------------------
+for (var i = 0 ; i < document.querySelectorAll(".btn").length ; i++) {
 
-for (var i = 0; i < document.querySelectorAll(".btn").length; i++ ) {
+    document.querySelectorAll(".btn")[i].addEventListener("click" , function(){
 
+        var userChosenColor = this.id;
+        userPattern.push(userChosenColor);
+        makeSound(userChosenColor);
+        checkAnswer(userPattern.length - 1);
+        boxAnimation(userChosenColor);
+    })
+}
+// ------------------------ Checking the answer -------------------------
+function checkAnswer (currentIndex) {
+    if (userPattern[currentIndex] === gamePattern[currentIndex]){
 
-    document.querySelectorAll(".btn")[i].addEventListener("click" , function() {
-
-        if (gameStarted){
-            gameOver();
+        if (userPattern.length === gamePattern.length){
+            setTimeout (function(){
+                nextSequence();
+            },1000);
         }
-        var buttonId = this.id;
-        makeSound(buttonId);
-        gameOver(buttonId);
-    } );
+    } else {
+        makeSound("wrong");
+        backGroundAnimation("background");
+        document.getElementById("level-title").textContent = "Game Over, Press Any Key to Restart";
+        startOver();
+    }
+}
+// -------------------------------- Restart the game -----------------------
+function startOver () {
+    level = 0;
+    gamePattern = [];
+    userPattern = [];
+    started = false;
+}
 
-function gameOver() {
-    document.getElementById("level-title").textContent = "Game Over, Press Any Key to Restart";
-    var soundGameOver = new Audio ("./wrong.mp3");
-    soundGameOver.play();
+// ------------------------------Playing proper sounds ----------------------
+function makeSound(button) {
+
+    switch(button) {
+        case "green":
+            var soundGreen = new Audio ("./green.mp3");
+            soundGreen.play();
+            break;
+
+        case "red":
+            var soundRed = new Audio ("./red.mp3");
+            soundRed.play();
+            break;
+        
+        case "yellow":
+            var soundYellow = new Audio ("./yellow.mp3");
+            soundYellow.play();
+            break;
+
+        case "blue":
+            var soundBlue = new Audio ("./blue.mp3");
+            soundBlue.play();
+            break;
+        
+        default:
+            var soundWrong = new Audio ("./wrong.mp3");
+            soundWrong.play();
+        break;
+    }
 
 }
 
-    // function makeSound(button) {
+function boxAnimation(currentBox){
+    var activeBox = document.getElementById(currentBox);
+    activeBox.classList.add("pressed");
+    setTimeout ( function(){
+        activeBox.classList.remove("pressed");
 
-    //     switch(button) {
-    //         case "green":
-    //             var soundGreen = new Audio ("./green.mp3");
-    //             soundGreen.play();
-    //             break;
-
-    //         case "red":
-    //             var soundRed = new Audio ("./red.mp3");
-    //             soundRed.play();
-    //             break;
-            
-    //         case "yellow":
-    //             var soundYello = new Audio ("./yellow.mp3");
-    //             soundYello.play();
-    //             break;
-
-    //         case "blue":
-    //             var soundBlue = new Audio ("./blue.mp3");
-    //             soundBlue.play();
-    //             break;
-            
-    //         default: console.log(buttonId);
-    //         break;
-    //     }
-
-    // }
+    },100)
 }
+
+function backGroundAnimation (id) {
+    var bg = document.getElementById(id);
+    bg.classList.add("bg-flash");
+    setTimeout ( function(){
+        bg.classList.remove("bg-flash");
+    },100)
+}
+
 
     
